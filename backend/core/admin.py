@@ -7,8 +7,8 @@ from core.models import FileSystem
 
 @admin.register(FileSystem)
 class FileSystemAdmin(DraggableMPTTAdmin):
-    empty_value_display = 'null'
-    list_display = ('indented_title', 'url', 'type', 'date', 'size')
+    empty_value_display = "null"
+    list_display = ("indented_title", "url", "type", "date", "size")
 
 
 admin.site.unregister(User)
