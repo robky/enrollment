@@ -27,6 +27,9 @@ class FileSystem(MPTTModel):
         parent = self.parent_id if self.parent else self.id
         return f"элемент_{parent}_{self.id}"
 
+    def get_name_str(self):
+        return self.__str__()
+
     def save(self, *args, **kwargs):
         try:
             old_instance = FileSystem.objects.get(id=self.id)
@@ -53,6 +56,10 @@ class FileSystem(MPTTModel):
 def _recount_size(instance: FileSystem, value: int):
     with transaction.atomic():
         instance.get_ancestors().filter(type=1).update(size=F("size") + value)
+
+
+def get_id_from_str(string: str) -> int:
+    return int(string.split("_")[-1:-2:-1][0])
 
 
 def print_latest_queries():
