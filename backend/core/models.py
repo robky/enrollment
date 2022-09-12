@@ -8,6 +8,7 @@ TYPE_CHOICES = (
     (TYPE_FOLDER, "FOLDER"),
     (TYPE_FILE, "FILE"),
 )
+TYPE_NAME = dict(reversed(item) for item in TYPE_CHOICES)
 
 
 class FileSystem(MPTTModel):

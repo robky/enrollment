@@ -126,3 +126,7 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exception.custom_exception_handler'
+}
