@@ -12,6 +12,7 @@ TYPE_NAME = dict(reversed(item) for item in TYPE_CHOICES)
 
 
 class FileSystem(MPTTModel):
+    id = models.CharField(primary_key=True, unique=True, max_length=50)
     url = models.CharField(null=True, max_length=255, default=None)
     type = models.PositiveSmallIntegerField(choices=TYPE_CHOICES)
     parent = TreeForeignKey(
@@ -25,42 +26,38 @@ class FileSystem(MPTTModel):
     size = models.IntegerField(default=0)
 
     def __str__(self):
-        parent = self.parent_id if self.parent else self.id
-        return f"элемент_{parent}_{self.id}"
+        return self.id
 
-    def get_name_str(self):
-        return self.__str__()
-
-    def save(self, *args, **kwargs):
-        try:
-            old_instance = FileSystem.objects.get(id=self.id)
-        except FileSystem.DoesNotExist:
-            super(FileSystem, self).save()
-            _recount_size(instance=self, value=self.size)
-            return
-        different_size = self.size - old_instance.size
-        if different_size:
-            _recount_size(instance=self, value=different_size)
-        return super(FileSystem, self).save()
-
-    def delete(self, *args, **kwargs):
-        _recount_size(instance=self, value=-self.size)
-        return super(FileSystem, self).delete()
-
-    def move_to(self, target, position="first-child"):
-        old_instance = FileSystem.objects.get(id=self.id)
-        _recount_size(instance=old_instance, value=-old_instance.size)
-        super(FileSystem, self).move_to(target, position)
-        _recount_size(instance=self, value=self.size)
+    # def save(self, *args, **kwargs):
+    #     try:
+    #         old_instance = FileSystem.objects.get(id=self.id)
+    #     except FileSystem.DoesNotExist:
+    #         super(FileSystem, self).save()
+    #         _recount_size(instance=self, value=self.size)
+    #         return
+    #     different_size = self.size - old_instance.size
+    #     if different_size:
+    #         _recount_size(instance=self, value=different_size)
+    #     return super(FileSystem, self).save()
+    #
+    # def delete(self, *args, **kwargs):
+    #     _recount_size(instance=self, value=-self.size)
+    #     return super(FileSystem, self).delete()
+    #
+    # def move_to(self, target, position="first-child"):
+    #     old_instance = FileSystem.objects.get(id=self.id)
+    #     _recount_size(instance=old_instance, value=-old_instance.size)
+    #     super(FileSystem, self).move_to(target, position)
+    #     _recount_size(instance=self, value=self.size)
 
 
-def _recount_size(instance: FileSystem, value: int):
+def recount_size(instance: FileSystem):
+    new_size = instance.size
+    new_date = instance.date
     with transaction.atomic():
-        instance.get_ancestors().filter(type=1).update(size=F("size") + value)
-
-
-def get_id_from_str(string: str) -> int:
-    return int(string.split("_")[-1:-2:-1][0])
+        instance.get_ancestors().filter(type=1).update(
+            size=F("size") + new_size, date=new_date
+        )
 
 
 def print_latest_queries():

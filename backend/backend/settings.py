@@ -128,5 +128,7 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'api.exception.custom_exception_handler'
+    "EXCEPTION_HANDLER": "api.exception.custom_exception_handler"
 }
+
+APPEND_SLASH = False
