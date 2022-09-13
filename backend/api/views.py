@@ -27,6 +27,8 @@ class NodesViewSet(ReadOnlyModelViewSet):
 
 
 class ImportsViewSet(mixins.CreateModelMixin, GenericViewSet):
+    serializer_class = NodesImportsSerializer
+
     def create(self, request, *args, **kwargs):
         serializer = NodesImportsSerializer(
             data=request.data, context={"request": request}
@@ -38,9 +40,10 @@ class ImportsViewSet(mixins.CreateModelMixin, GenericViewSet):
                 item["date"] = update_date
                 item["type"] = TYPE_NAME[item["type"]]
                 parent = item.get("parentId", None)
-                item.pop("parentId")
                 if parent:
                     item["parent"] = get_object_or_404(FileSystem, id=parent)
+                if "parentId" in item:
+                    item.pop("parentId")
                 try:
                     node = FileSystem.objects.create(**item)
                 except IntegrityError:
