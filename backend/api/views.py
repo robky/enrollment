@@ -38,8 +38,8 @@ class ImportsViewSet(mixins.CreateModelMixin, GenericViewSet):
                 item["date"] = update_date
                 item["type"] = TYPE_NAME[item["type"]]
                 parent = item.get("parentId", None)
+                item.pop("parentId")
                 if parent:
-                    item.pop("parentId")
                     item["parent"] = get_object_or_404(FileSystem, id=parent)
                 try:
                     node = FileSystem.objects.create(**item)
