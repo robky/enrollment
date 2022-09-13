@@ -1,6 +1,5 @@
 from rest_framework.views import exception_handler
 
-
 ERROR_MESSAGES = {400: "Validation Failed", 404: "Item not found"}
 
 

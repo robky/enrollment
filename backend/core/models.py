@@ -28,34 +28,18 @@ class FileSystem(MPTTModel):
     def __str__(self):
         return self.id
 
-    # def save(self, *args, **kwargs):
-    #     try:
-    #         old_instance = FileSystem.objects.get(id=self.id)
-    #     except FileSystem.DoesNotExist:
-    #         super(FileSystem, self).save()
-    #         _recount_size(instance=self, value=self.size)
-    #         return
-    #     different_size = self.size - old_instance.size
-    #     if different_size:
-    #         _recount_size(instance=self, value=different_size)
-    #     return super(FileSystem, self).save()
-    #
-    # def delete(self, *args, **kwargs):
-    #     _recount_size(instance=self, value=-self.size)
-    #     return super(FileSystem, self).delete()
-    #
-    # def move_to(self, target, position="first-child"):
-    #     old_instance = FileSystem.objects.get(id=self.id)
-    #     _recount_size(instance=old_instance, value=-old_instance.size)
-    #     super(FileSystem, self).move_to(target, position)
-    #     _recount_size(instance=self, value=self.size)
+    def move_to(self, target):
+        old_instance = FileSystem.objects.get(id=self.id)
+        recount_size_set_data(instance=old_instance, add_operation=False)
+        super(FileSystem, self).move_to(target)
+        recount_size_set_data(instance=self)
 
 
-def recount_size(instance: FileSystem):
-    new_size = instance.size
+def recount_size_set_data(instance: FileSystem, add_operation: bool = True):
     new_date = instance.date
+    new_size = instance.size if add_operation else -instance.size
     with transaction.atomic():
-        instance.get_ancestors().filter(type=1).update(
+        instance.get_ancestors().filter(type=TYPE_FOLDER).update(
             size=F("size") + new_size, date=new_date
         )
 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_recursive.fields import RecursiveField
 
-from core.models import FileSystem, TYPE_NAME
+from core.models import TYPE_NAME, FileSystem
 
 
 class NodesSerializer(serializers.ModelSerializer):
@@ -20,15 +20,10 @@ class NodesSerializer(serializers.ModelSerializer):
         return result
 
 
-class NodesItemsSerializer(serializers.ModelSerializer):
-    id = serializers.CharField(required=True)
+class NodesItemsBaseSerializer(serializers.ModelSerializer):
     type = serializers.CharField(required=True)
     parentId = serializers.CharField(required=False, allow_null=True)
     size = serializers.IntegerField(min_value=1, required=False)
-
-    class Meta:
-        model = FileSystem
-        fields = ("id", "url", "parentId", "size", "type")
 
     def validate_type(self, value):
         if value in TYPE_NAME:
@@ -46,8 +41,14 @@ class NodesItemsSerializer(serializers.ModelSerializer):
         return attrs
 
 
+class NodesItemsImportSerializer(NodesItemsBaseSerializer):
+    class Meta:
+        model = FileSystem
+        fields = ("id", "url", "parentId", "size", "type")
+
+
 class NodesImportsSerializer(serializers.Serializer):
-    items = NodesItemsSerializer(many=True)
+    items = NodesItemsImportSerializer(many=True)
     updateDate = serializers.DateTimeField(required=True)
 
     class Meta:
@@ -57,3 +58,23 @@ class NodesImportsSerializer(serializers.Serializer):
         if value:
             return value
         raise serializers.ValidationError("Пустое значение")
+
+
+class NodesItemsUpdateSerializer(NodesItemsBaseSerializer):
+    type = serializers.CharField(source="get_type_display")
+    parentId = serializers.CharField(allow_null=True)
+
+    class Meta:
+        model = FileSystem
+        fields = ("id", "url", "date", "parentId", "size", "type")
+
+
+class NodesUpdateSerializer(serializers.Serializer):
+    items = NodesItemsUpdateSerializer(many=True)
+
+    class Meta:
+        fields = ("items",)
+
+
+class DateTimeSerializer(serializers.Serializer):
+    date = serializers.DateTimeField(required=True)
