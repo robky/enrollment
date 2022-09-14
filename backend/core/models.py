@@ -29,7 +29,6 @@ class FileSystem(MPTTModel):
         return self.id
 
     def move_to(self, target, old_size: int):
-        # old_instance = FileSystem.objects.get(id=self.id)
         recount_size_set_data(instance=self, old_size=-old_size)
         super(FileSystem, self).move_to(target)
         recount_size_set_data(instance=self)
@@ -38,10 +37,10 @@ class FileSystem(MPTTModel):
         return dict(
             id=self.id,
             url=self.url,
-            date=self.date.isoformat(),
+            date=self.date.isoformat() + "Z",
             parentId=self.parent_id,
             size=self.size,
-            type=self.type,
+            type=self.get_type_display(),
         )
 
 

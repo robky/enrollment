@@ -243,7 +243,7 @@ def test_updates():
     print("Test updates passed.")
 
 
-def no_test_history():
+def test_history():
     params = urllib.parse.urlencode({
         "dateStart": "2022-02-01T00:00:00Z",
         "dateEnd": "2022-02-03T00:00:00Z"
@@ -271,7 +271,7 @@ def test_all():
     test_import()
     test_nodes()
     test_updates()
-    # test_history()
+    test_history()
     test_delete()
 
 
