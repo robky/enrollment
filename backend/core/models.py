@@ -37,7 +37,7 @@ class FileSystem(MPTTModel):
         return dict(
             id=self.id,
             url=self.url,
-            date=self.date.isoformat() + "Z",
+            date=self.date.strftime("%Y-%m-%dT%H:%M:%SZ"),
             parentId=self.parent_id,
             size=self.size,
             type=self.get_type_display(),
