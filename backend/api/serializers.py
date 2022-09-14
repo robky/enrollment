@@ -21,9 +21,13 @@ class NodesSerializer(serializers.ModelSerializer):
 
 
 class NodesItemsBaseSerializer(serializers.ModelSerializer):
+    id = serializers.CharField()
     type = serializers.CharField(required=True)
-    parentId = serializers.CharField(required=False, allow_null=True)
-    size = serializers.IntegerField(min_value=1, required=False)
+    parentId = serializers.CharField(allow_null=True)
+    size = serializers.IntegerField(
+        min_value=1, allow_null=True, required=False
+    )
+    url = serializers.CharField(allow_null=True, required=False)
 
     def validate_type(self, value):
         if value in TYPE_NAME:
