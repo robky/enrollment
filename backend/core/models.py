@@ -43,6 +43,12 @@ class FileSystem(MPTTModel):
             type=self.get_type_display(),
         )
 
+    def is_folder(self):
+        return self.type == TYPE_FOLDER
+
+    def is_file(self):
+        return self.type == TYPE_FILE
+
 
 class History(models.Model):
     node = models.ForeignKey(

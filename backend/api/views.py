@@ -42,6 +42,18 @@ class ImportsViewSet(mixins.CreateModelMixin, GenericViewSet):
         )
         if serializer.is_valid(raise_exception=True):
             items_data = serializer.validated_data.get("items")
+            if not _is_id_unique([item["id"] for item in items_data]):
+                raise ValidationError({"detail": "Одинаковые id"})
+            if not _is_parents_folders(
+                [
+                    item["parentId"]
+                    for item in items_data
+                    if item["parentId"] is not None
+                ]
+            ):
+                raise ValidationError(
+                    {"detail": "Родитель должен существовать и быть папкой"}
+                )
             update_date = serializer.validated_data.get("updateDate")
             for item in items_data:
                 if item.get("size", False) is None:
@@ -67,6 +79,19 @@ class ImportsViewSet(mixins.CreateModelMixin, GenericViewSet):
                     set_position_history(node=node)
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def _is_id_unique(values: list) -> bool:
+    return len(values) == len(set(values))
+
+
+def _is_parents_folders(values: list) -> bool:
+    values = set(values)
+    for parent_id in values:
+        parent = get_object_or_404(FileSystem, id=parent_id)
+        if parent.is_file():
+            raise ValidationError({"detail": "Родитель только папка"})
+    return True
 
 
 def _update_node(data: dict) -> FileSystem:
