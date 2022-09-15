@@ -14,7 +14,6 @@ class NodesTests(APITestCase):
         cls.client = APIClient()
 
         cls.imports_url = reverse("api:imports-list")
-        cls.imports_url = reverse("api:delete")
 
         cls.item_folder = dict(
             id="test-100", url=None, type="FOLDER", parentId=None, size=None
