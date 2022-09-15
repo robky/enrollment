@@ -127,7 +127,9 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "api.exception.custom_exception_handler"
+    "EXCEPTION_HANDLER": "api.exception.custom_exception_handler",
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DATETIME_FORMAT": "%Y-%m-%dT%H:%M:%S.%fZ",
 }
 
 APPEND_SLASH = False

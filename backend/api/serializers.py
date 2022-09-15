@@ -27,7 +27,7 @@ class NodesItemsBaseSerializer(serializers.ModelSerializer):
     size = serializers.IntegerField(
         min_value=1, allow_null=True, required=False
     )
-    url = serializers.CharField(allow_null=True, required=False)
+    url = serializers.CharField(allow_null=True, required=False, max_length=255)
 
     def validate_type(self, value):
         if value in TYPE_NAME:
@@ -42,6 +42,13 @@ class NodesItemsBaseSerializer(serializers.ModelSerializer):
                 or "parentId" not in attrs
             ):
                 raise serializers.ValidationError("Недостаточно данных")
+            if attrs.get('url') is None:
+                raise serializers.ValidationError("У файла не может быть null")
+        else:
+            if attrs.get('url') is not None:
+                raise serializers.ValidationError("У папки всегда null")
+            if attrs.get('size') is not None:
+                raise serializers.ValidationError("У папки всегда null")
         return attrs
 
 
