@@ -16,8 +16,8 @@ Docker
 https://mother-1836.usr.yandex-academy.ru
 
 ### Django admin
-```
 https://mother-1836.usr.yandex-academy.ru/admin
+```
 login: user
 password: 1234
 ```
@@ -47,7 +47,7 @@ password: 1234
 Скачать файлы из [папки deploy](https://github.com/robky/enrollment/tree/master/deploy)
 
 Выполнить последовательно 2 скрипта:
-'''
+```
 deploy.sh
 tuning.sh
-'''
+```
