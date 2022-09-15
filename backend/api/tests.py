@@ -171,10 +171,10 @@ class NodesTests(APITestCase):
         second = 1
         for test in tests:
             items = test
-            updateDate = datetime(2022, 9, 1, 10, 20, second).strftime(
+            update_date = datetime(2022, 9, 1, 10, 20, second).strftime(
                 "%Y-%m-%dT%H:%M:%SZ"
             )
-            import_data = dict(items=items, updateDate=updateDate)
+            import_data = dict(items=items, updateDate=update_date)
             response = self.client.post(self.imports_url, import_data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             second += 5
@@ -182,13 +182,19 @@ class NodesTests(APITestCase):
         self.assertEqual(FileSystem.objects.count(), nodes_count + 7)
         node3 = FileSystem.objects.get(id=folder3["id"])
         self.assertEqual(node3.size, file3["size"] + file4["size"])
-        self.assertEqual(node3.date.strftime("%Y-%m-%dT%H:%M:%SZ"), updateDate)
+        self.assertEqual(
+            node3.date.strftime("%Y-%m-%dT%H:%M:%SZ"), update_date
+        )
         node2 = FileSystem.objects.get(id=folder2["id"])
         self.assertEqual(node2.size, node3.size + file2["size"])
-        self.assertEqual(node2.date.strftime("%Y-%m-%dT%H:%M:%SZ"), updateDate)
+        self.assertEqual(
+            node2.date.strftime("%Y-%m-%dT%H:%M:%SZ"), update_date
+        )
         node1 = FileSystem.objects.get(id=folder1["id"])
         self.assertEqual(node1.size, node2.size + file1["size"])
-        self.assertEqual(node1.date.strftime("%Y-%m-%dT%H:%M:%SZ"), updateDate)
+        self.assertEqual(
+            node1.date.strftime("%Y-%m-%dT%H:%M:%SZ"), update_date
+        )
 
         # Меняем размер нижнего элемента
         file4["size"] = file4["size"] + 3
