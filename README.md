@@ -1,11 +1,7 @@
-# Тестовая задача
 ### Описание
-Предлагалось реализовать бэкенд для веб-сервиса хранения информации о хранимых 
-файлах (не самих файлов, а информации о них: расположение, размер, тип 
+Предлагалось реализовать бэкенд для веб-сервиса хранения информации о 
+хранимых файлах (не самих файлов, а информации о них: расположение, размер, тип 
 файл/папка и т.п.). Подробнее: [Описание задачи](https://github.com/robky/enrollment/blob/master/Task.md).
-
-Не реализовано в полном объеме эндпоинт: /node/{id}/history - информация сохраняется только для файлов (невнимательно прочитал задание)
-Тесты также не успел дописать.
 
 ### Технологии
 Python 3.8
@@ -15,15 +11,6 @@ Django Rest Framework 3.13.1
 PostgreSQL
 Docker
 
-### Demo:
-https://mother-1836.usr.yandex-academy.ru
-
-### Django admin
-https://mother-1836.usr.yandex-academy.ru/admin
-```
-login: user
-password: 1234
-```
 
 ![example branch parameter](https://github.com/robky/enrollment/actions/workflows/enrollment.yml/badge.svg)
 
